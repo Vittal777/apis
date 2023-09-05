@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light">
+    <link rel="stylesheet" href="dicapi.css">
+    <title>Dictionary API Example</title>
+</head>
+<body>
+    <h1>Dictionary API Example</h1>
+    <div class="block">
+        <label for="wordInput">Enter a word:</label>
+        <input type="text" id="wordInput" placeholder="Search here">
+        <img class='getimg' src="dict.png" onclick="fetchWordData()" width="50px" height="50px">
+        </div>
+    <div id="result"></div>
+
+    <script>
+        async function fetchWordData() {
+            const word = document.getElementById('wordInput').value;
+            const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (Array.isArray(data) && data.length > 0) {
+                    const wordData = data[0];
+                    const resultDiv = document.getElementById('result');
+
+                    const partOfSpeech = wordData.meanings[0].partOfSpeech;
+                    const definition = wordData.meanings[0].definitions[0].definition;
+
+                    const pronunciation = wordData.phonetics && wordData.phonetics.length > 0 ? wordData.phonetics[0].text : '';
+
+                    resultDiv.innerHTML = `
+                        <h2>${word}</h2>
+                        <p><strong>Part of speech:</strong> ${partOfSpeech}</p>
+                        <p><strong>Definition:</strong> ${definition}</p>
+                        ${pronunciation ? `<p><strong>Pronunciation:</strong> ${pronunciation}</p>` : ''}
+                    `;
+                } else {
+                    displayErrorMessage('Word not found');
+                }
+            } catch (error) {
+                displayErrorMessage('Error occurred while fetching data');
+            }
+        }
+
+        function displayErrorMessage(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p style="color: red;">${message}</p>`;
+        }
+    </script>
+</body>
+</html>

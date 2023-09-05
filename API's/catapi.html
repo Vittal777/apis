@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <meta name='color-scheme' content="dark">
+    </head>
+    <body>
+        <h1>Pilli ni raa tammudu</h1>
+        <img src="https://placeholder.com/300" id="catpic" alt="A cat">
+        <script>
+            function  fetchCatPic(){
+                fetch('https://api.thecatapi.com/v1/images/search')
+                .then(response=>response.json())
+                .then(data=>{
+                        const imageUrl = data[0].url;
+                        document.getElementById('catpic').src = imageUrl
+                    })
+                .catch(error=>{
+                    alert('Error ocurred')
+                });
+            }
+            fetchCatPic();
+        </script>
+    </body>
+</html>
